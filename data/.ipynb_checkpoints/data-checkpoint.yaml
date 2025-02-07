@@ -1,0 +1,5 @@
+train: images/train
+val: images/test
+
+nc: 14  
+names: ["_flawless_amethyst", "_flawless_diamond", "_flawless_emerald", "_flawless_ruby", "_flawless_saphire", "_flawless_skull", "_flawless_topaz", "_perfect_amethyst", "_perfect_diamond", "_perfect_emerald", "_perfect_ruby", "_perfect_saphire", "_perfect_skull", "_perfect_topaz"]
