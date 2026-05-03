@@ -79,7 +79,7 @@ class Panel:
         r+=2; self.sp(r); r+=1
 
         self.lb("【功能】",r); r+=1
-        for i,(t,k) in enumerate([("回城","esc"),("装备","b"),("技能","s"),("任务","q")]):
+        for i,(t,k) in enumerate([("回城","esc"),("装备","b"),("技能","s"),("任务","q"),("切换","w")]):
             self.gr(self.bt(t,lambda kk=k: gk(kk)),r+(i//2),i%2)
         r+=2
         for i,(t,k) in enumerate([("属性","a"),("背包","i"),("角色","c"),("佣兵","o")]):
