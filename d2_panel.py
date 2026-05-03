@@ -78,13 +78,24 @@ class Panel:
             self.gr(self.bt(f"F{i+5}",lambda k=f"F{i+5}": gk(k)),r+(i//2),i%2)
         r+=2; self.sp(r); r+=1
 
+        self.lb("【佣兵药水】",r); r+=1
+        self.gr(self.bt("S+1",lambda: pyautogui.hotkey('shift','1')),r,0)
+        self.gr(self.bt("S+2",lambda: pyautogui.hotkey('shift','2')),r,1)
+        r+=1
+        self.gr(self.bt("S+3",lambda: pyautogui.hotkey('shift','3')),r,0)
+        self.gr(self.bt("S+4",lambda: pyautogui.hotkey('shift','4')),r,1)
+        r+=1; self.sp(r); r+=1
+
         self.lb("【功能】",r); r+=1
-        for i,(t,k) in enumerate([("回城","esc"),("装备","b"),("技能","s"),("任务","q"),("切换","w")]):
+        for i,(t,k) in enumerate([("回城","esc"),("装备","b"),("技能","s"),("任务","q")]):
             self.gr(self.bt(t,lambda kk=k: gk(kk)),r+(i//2),i%2)
         r+=2
         for i,(t,k) in enumerate([("属性","a"),("背包","i"),("角色","c"),("佣兵","o")]):
             self.gr(self.bt(t,lambda kk=k: gk(kk)),r+(i//2),i%2)
-        r+=2; self.sp(r); r+=1
+        r+=2
+        # 切换武器单独一行
+        self.gr(self.bt("切换 W",lambda: gk('w')),r,0)
+        r+=1
 
         self.gr(self.bt("⏹退出",lambda: os._exit(0)),r,0)
         r+=1
