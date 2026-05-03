@@ -94,7 +94,7 @@ class Panel:
             self.gr(self.bt(t,lambda kk=k: gk(kk)),r+(i//2),i%2)
         r+=2
         # 切换武器单独一行
-        self.gr(self.bt("切换 W",lambda: gk('w')),r,0)
+        self.gr(self.bt("切换",lambda: gk('w')),r,0)
         r+=1
 
         self.gr(self.bt("⏹退出",lambda: os._exit(0)),r,0)
