@@ -11,16 +11,16 @@ import subprocess
 sys.path.insert(0, "/home/user/yolov8n-sfos/python")
 
 from yolo_backend import YOLOv8Detector
-MODEL = "/home/user/yolo-sfos-app/src/yolov8n_relu_20class_zq.onnx"
+MODEL = "/home/user/diablo2_object_dection_yolo_v10/runs/detect/monster_runs/monster_finetune/weights/best.onnx"
 if not os.path.exists(MODEL):
-    MODEL = "yolov8n_relu_20class_zq.onnx"
-det = YOLOv8Detector(MODEL, conf=0.03, iou=0.45)
+    MODEL = "/home/user/diablo2_object_dection_yolo_v10/runs/detect/monster_runs/monster_finetune/weights/best.onnx"
+det = YOLOv8Detector(MODEL, conf=0.4, iou=0.45)
 print("Using ONNX YOLOv8 model")
 
 import pyautogui
 import random
 
-MONSTER_CLASS = "class_14"
+MONSTER_CLASS = 0  # 专注模型只有1个类（monster），cls=0
 ATTACK_BUTTON = "left"
 ROLE_CENTER_RADIUS = 60
 ATTACK_COOLDOWN = 0.2
@@ -106,45 +106,12 @@ with mss.mss() as sct:
             h, w = frame.shape[:2]
             cx, cy = w // 2, h // 2
 
-            # 找出角色自身：离画面中心最近的class_14
-            players = []
+            monsters = []
+            any_class14 = True if len(dets) > 0 else False
             for d in dets:
-                if d['name'] != MONSTER_CLASS:
-                    continue
                 obj_cx = (d['x1'] + d['x2']) // 2
                 obj_cy = (d['y1'] + d['y2']) // 2
                 dist = ((obj_cx - cx) ** 2 + (obj_cy - cy) ** 2) ** 0.5
-                players.append((d, dist))
-            players.sort(key=lambda x: x[1])
-
-            # 获取角色大小（用离中心最近的作为参考）
-            player_size = 60
-            if players:
-                player_size = max(players[0][0]['x2'] - players[0][0]['x1'], players[0][0]['y2'] - players[0][0]['y1'])
-            monster_size_limit = player_size * 2.0
-
-            # 排除离中心最近的2个class_14（角色+佣兵）
-            player_ids = {id(p[0]) for p in players[:2]}
-
-            monsters = []
-            any_class14 = False
-            for d in dets:
-                if d['name'] != MONSTER_CLASS:
-                    continue
-                any_class14 = True
-                # 排除角色和佣兵
-                if id(d) in player_ids:
-                    continue
-                # 按大小过滤：用角色大小×2为上限
-                obj_size = max(d['x2'] - d['x1'], d['y2'] - d['y1'])
-                if obj_size > monster_size_limit:
-                    continue
-                # 按形状过滤：火堆/桶等是接近正方形的（宽高比0.7~1.3），怪物是竖着的
-                obj_w = d['x2'] - d['x1']
-                obj_h = d['y2'] - d['y1']
-                aspect = obj_w / obj_h if obj_h > 0 else 0
-                if 0.7 < aspect < 1.3:
-                    continue  # 接近正方形，排除（火堆、桶、箱子）
                 monsters.append((d, dist))
 
             # 过滤已判定为假目标（攻击多次没死）
@@ -171,6 +138,7 @@ with mss.mss() as sct:
                 last_monster_seen = now
                 is_moving = False
                 attack_count += 1
+                print(f"  ATTACK #{attack_count} dist={dist:.0f} ({len(monsters)} monsters)")
 
                 # 记录攻击次数
                 tid = id(target)

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Datasets (large)
+monster_data/
+preview_boxes/
+
+# Model weights (large)
+runs/detect/train/
+*.onnx
+*.pt
+
+# Training outputs
+runs/detect/*/weights/
+runs/detect/*/confusion_matrix.png
+runs/detect/*/labels.jpg
+
+# OS
+.DS_Store
+Thumbs.db
